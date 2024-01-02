@@ -1,3 +1,4 @@
+// import the axios object and the AXIOSINSTANCE , AXIOSREQUESTCONFIG type
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 const axiosParams = {
@@ -9,6 +10,24 @@ const axiosParams = {
 // Create axios instance with default Parfams
 
 const axiosInstance = axios.create(axiosParams);
+
+axiosInstance.interceptors.request.use(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (config: any) => {
+    // This adds an authorization key to config object if a token exists.
+    // if (isAuthenticated()) {
+    //   config.headers["Authorization"] = `Bearer ${getToken()}`;
+    // }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Create the main Api function
 
