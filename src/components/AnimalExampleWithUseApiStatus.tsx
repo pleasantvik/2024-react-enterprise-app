@@ -2,16 +2,26 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchDog } from "../api/animalApi";
 import { withAsync } from "../helpers/withAsync";
 import {
-  ApiStatus,
+  // ApiStatus,
   ERROR,
   IDLE,
   PENDING,
   SUCCESS,
 } from "../api/constants/apiStatus";
+import { useApiStatus } from "../hooks/useApiStatus";
 
 const useFetchDog = () => {
   const [dog, setDog] = useState<string>();
-  const [fetchDogStatus, setDogStatus] = useState<ApiStatus>(IDLE);
+  // const [fetchDogStatus, setDogStatus] = useState<ApiStatus>(IDLE);
+
+  const {
+    status: fetchDogStatus,
+    setStatus: setDogStatus,
+    isError: isFetchDogStatusError,
+    isIdle: isFetchDogStatusIdle,
+    isPending: isFetchDogStatusPending,
+    isSuccess: isFetchDogStatusSuccess,
+  } = useApiStatus(IDLE);
 
   const initFetchDog = useCallback(async () => {
     // try {
@@ -36,10 +46,22 @@ const useFetchDog = () => {
     dog,
     fetchDogStatus,
     initFetchDog,
+    isFetchDogStatusError,
+    isFetchDogStatusIdle,
+    isFetchDogStatusPending,
+    isFetchDogStatusSuccess,
   };
 };
 const AnimalExampleWithApiStates = () => {
-  const { dog, fetchDogStatus, initFetchDog } = useFetchDog();
+  const {
+    dog,
+    // fetchDogStatus,
+    initFetchDog,
+    isFetchDogStatusError,
+    isFetchDogStatusIdle,
+    isFetchDogStatusPending,
+    isFetchDogStatusSuccess,
+  } = useFetchDog();
   useEffect(() => {
     initFetchDog();
   }, [initFetchDog]);
@@ -47,10 +69,10 @@ const AnimalExampleWithApiStates = () => {
     <div className="my-8 mx-auto max-w-2xl">
       <div className="flex justify-center gap-8">
         <div className="w-64 h-64">
-          {fetchDogStatus === IDLE ? <p>Welcome</p> : null}
-          {fetchDogStatus === PENDING ? <p>Loading data...</p> : null}
-          {fetchDogStatus === ERROR ? <p>There was a problem</p> : null}
-          {fetchDogStatus === SUCCESS ? (
+          {isFetchDogStatusIdle ? <p>Welcome</p> : null}
+          {isFetchDogStatusPending ? <p>Loading data...</p> : null}
+          {isFetchDogStatusError ? <p>There was a problem</p> : null}
+          {isFetchDogStatusSuccess ? (
             <img className="h-64 w-full object-cover" src={dog} alt="Dog" />
           ) : null}
         </div>
