@@ -9,6 +9,7 @@ import {
   SUCCESS,
 } from "../api/constants/apiStatus";
 import { useApiStatus } from "../hooks/useApiStatus";
+import Spinner from "./LazyLoader";
 
 const useFetchDog = () => {
   const [dog, setDog] = useState<string>();
@@ -70,6 +71,7 @@ const AnimalExampleWithApiStates = () => {
       <div className="flex justify-center gap-8">
         <div className="w-64 h-64">
           {isFetchDogStatusIdle ? <p>Welcome</p> : null}
+          <Spinner show={isFetchDogStatusPending} delay={4000} />
           {isFetchDogStatusPending ? <p>Loading data...</p> : null}
           {isFetchDogStatusError ? <p>There was a problem</p> : null}
           {isFetchDogStatusSuccess ? (
